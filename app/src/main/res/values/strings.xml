@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Translate App</string>
+    <string-array name="languages">
+    <item name="language1" type="string">Arabic</item>
+    <item name="language2" type="string">Bulgarian</item>
+    <item name="language3" type="string">Czech</item>
+        <item name="language4" type="string">German</item>
+        <item name="language5" type="string">Greek</item>
+        <item name="language6" type="string">English</item>
+        <item name="language7" type="string">Spanish</item>
+        <item name="language8" type="string">Finish</item>
+        <item name="language9" type="string">French</item>
+        <item name="language10" type="string">Irish</item>
+        <item name="language11" type="string">Hindi</item>
+        <item name="language12" type="string">Japanese</item>
+        <item name="language13" type="string">Korean</item>
+        <item name="language14" type="string">Romanian</item>
+        <item name="language15" type="string">Russian</item>
+        <item name="language16" type="string">Chinese</item>
+        <item name="language17" type="string">Turkish</item>
+    </string-array>
+    <string-array name="languagesSpeak">
+        <item name="languageSpeak3" type="string">Czech</item>
+        <item name="languageSpeak4" type="string">German</item>
+        <item name="languageSpeak6" type="string">English</item>
+        <item name="languageSpeak7" type="string">Spanish</item>
+        <item name="languageSpeak8" type="string">Finish</item>
+        <item name="languageSpeak9" type="string">French</item>
+        <item name="languageSpeak10" type="string">Irish</item>
+        <item name="languageSpeak12" type="string">Japanese</item>
+        <item name="languageSpeak13" type="string">Korean</item>
+        <item name="languageSpeak14" type="string">Romanian</item>
+        <item name="languageSpeak15" type="string">Russian</item>
+        <item name="languageSpeak17" type="string">Turkish</item>
+    </string-array>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -48,4 +48,5 @@
         app:layout_constraintStart_toEndOf="@+id/langPreview1"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_send" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

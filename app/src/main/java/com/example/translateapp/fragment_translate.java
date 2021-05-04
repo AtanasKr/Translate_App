@@ -121,6 +121,7 @@ public class fragment_translate extends Fragment {
                 TranslatorOptions source = new TranslatorOptions.Builder().setSourceLanguage(TranslateLanguage.fromLanguageTag(getLanguageTag(langName1.getText().toString()))).setTargetLanguage(TranslateLanguage.fromLanguageTag(getLanguageTag(langName2.getText().toString()))).build();
                 final Translator translator = Translation.getClient(source);
                 DownloadConditions conditions = new DownloadConditions.Builder().requireWifi().build();
+                fragment_history.deleter = false;
                 translator.downloadModelIfNeeded(conditions).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -138,9 +139,12 @@ public class fragment_translate extends Fragment {
                     @Override
                     public void onSuccess(String s) {
                         setTranslatedText.setText(s);
-                        editor.putString("firstLanguage",lang1.getSelectedItem().toString());
+                        //TODO MAKE HISTORY LONGER
+                        fragment_history.counter++;
+                        fragment_history.data.add(new HistoryData(lang1.getSelectedItem().toString(),lang2.getSelectedItem().toString(),textInput.getText().toString(),setTranslatedText.getText().toString(),fragment_history.counter));
+                        editor.putString("firstLanguage" ,lang1.getSelectedItem().toString());
                         editor.putString("secondLanguage",lang2.getSelectedItem().toString());
-                        editor.putString("firstInput",textInput.getText().toString());
+                        editor.putString("firstInput" ,textInput.getText().toString());
                         editor.putString("secondInput",setTranslatedText.getText().toString());
                         editor.apply();
                     }

@@ -113,6 +113,7 @@ public class fragment_speak extends Fragment {
                 speechToText.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, fragment_translate.getLanguageTag(getLang));
                 speechToText.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,fragment_translate.getLanguageTag(getLang));
                 startActivityForResult(speechToText,RECOGNIZE_RESULT);
+                fragment_history.deleter = false;
             }
         });
         super.onViewCreated(view, savedInstanceState);
@@ -185,6 +186,8 @@ public class fragment_speak extends Fragment {
                                            editor.putString("firstInput",matches.get(0));
                                            editor.putString("secondInput",s);
                                            editor.apply();
+                                           fragment_history.counter++;
+                                           fragment_history.data.add(new HistoryData(speakLang1.getSelectedItem().toString(),speakLang2.getSelectedItem().toString(),matches.get(0),s,fragment_history.counter));
                                            Log.d("testLang", s);
                                        }
                                    }).addOnFailureListener(new OnFailureListener() {

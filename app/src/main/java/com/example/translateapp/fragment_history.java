@@ -26,6 +26,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
@@ -45,7 +47,8 @@ public class fragment_history extends Fragment {
     static ArrayList<HistoryData> data = new ArrayList<>();
     private ListView historyHolder;
     static int counter=0;
-
+    Button delete;
+    static boolean deleter = false;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -97,6 +100,7 @@ public class fragment_history extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         historyHolder= (ListView) getView().findViewById(R.id.historyHolder);
+        delete = getView().findViewById(R.id.btn_delete);
         historyHolder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -116,6 +120,7 @@ public class fragment_history extends Fragment {
                View popUpView = LayoutInflater.from(getActivity()).inflate(R.layout.pop_up,null);
                 TextView firstPreviewText = popUpView.findViewById(R.id.langPreview1);
                 TextView secondPreviewText = popUpView.findViewById(R.id.langPreview);
+                //Button delete = popUpView.findViewById(R.id.btnDelete);
                 firstPreviewText.setText(data.get(position).getFirstInput().substring(0, Math.min(data.get(position).getFirstInput().length(),10)) + "...");
                 secondPreviewText.setText(data.get(position).getSecondInput().substring(0, Math.min(data.get(position).getSecondInput().length(),10)) + "...");
                 Dialog builder = new Dialog(getActivity());
@@ -123,6 +128,7 @@ public class fragment_history extends Fragment {
                 builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 builder.setContentView(popUpView);
                 builder.show();
+
                 return true;
             }
         });
@@ -138,16 +144,27 @@ public class fragment_history extends Fragment {
         String lang2 = sharedPreferences.getString("secondLanguage","");
         String firstInput = sharedPreferences.getString("firstInput","");
         String secondInput = sharedPreferences.getString("secondInput","");
-        if((counter!=0)&&(!(data.get(counter-1).getLangName1().equals(lang1)&&data.get(counter-1).getLangName2().equals(lang2)&&data.get(counter-1).getFirstInput().equals(firstInput)&&data.get(counter-1).getSecondInput().equals(secondInput)))){
+        if(deleter==false&&(counter!=0)&&(!(data.get(counter-1).getLangName1().equals(lang1)&&data.get(counter-1).getLangName2().equals(lang2)&&data.get(counter-1).getFirstInput().equals(firstInput)&&data.get(counter-1).getSecondInput().equals(secondInput)))){
             counter++;
             data.add(new HistoryData(lang1,lang2,firstInput,secondInput,counter));
         }
-        if(counter==0&&(!firstInput.equals(""))){
+        if(deleter==false&&counter==0&&(!firstInput.equals(""))){
             data.add(new HistoryData(lang1,lang2,firstInput,secondInput,counter));
             counter++;
         }
         CustomAdapter adapter = new CustomAdapter(getContext(),data);
         historyHolder.setAdapter(adapter);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<HistoryData> list = data;
+                data.removeAll(list);
+                counter = 0;
+                //data.clear();
+                adapter.notifyDataSetChanged();
+                deleter = true;
+            }
+        });
         super.onResume();
     }
 }

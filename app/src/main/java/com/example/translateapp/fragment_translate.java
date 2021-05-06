@@ -116,45 +116,49 @@ public class fragment_translate extends Fragment {
         translateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                TranslatorOptions source = new TranslatorOptions.Builder().setSourceLanguage(TranslateLanguage.fromLanguageTag(getLanguageTag(langName1.getText().toString()))).setTargetLanguage(TranslateLanguage.fromLanguageTag(getLanguageTag(langName2.getText().toString()))).build();
-                final Translator translator = Translation.getClient(source);
-                DownloadConditions conditions = new DownloadConditions.Builder().requireWifi().build();
-                fragment_history.deleter = false;
-                translator.downloadModelIfNeeded(conditions).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Translator model","Successful");
+                if (!textInput.getText().toString().isEmpty()) {
+                    SharedPreferences sharedPreferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    TranslatorOptions source = new TranslatorOptions.Builder().setSourceLanguage(TranslateLanguage.fromLanguageTag(getLanguageTag(langName1.getText().toString()))).setTargetLanguage(TranslateLanguage.fromLanguageTag(getLanguageTag(langName2.getText().toString()))).build();
+                    final Translator translator = Translation.getClient(source);
+                    DownloadConditions conditions = new DownloadConditions.Builder().requireWifi().build();
+                    fragment_history.deleter = false;
+                    translator.downloadModelIfNeeded(conditions).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Translator model", "Successful");
 
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("Translator model",e.getMessage());
-                                setTranslatedText.setText("Failed getting model");
-                            }
-                        });
-                translator.translate(textInput.getText().toString()).addOnSuccessListener(new OnSuccessListener<String>() {
-                    @Override
-                    public void onSuccess(String s) {
-                        setTranslatedText.setText(s);
-                        //TODO MAKE HISTORY LONGER
-                        fragment_history.counter++;
-                        fragment_history.data.add(new HistoryData(lang1.getSelectedItem().toString(),lang2.getSelectedItem().toString(),textInput.getText().toString(),setTranslatedText.getText().toString(),fragment_history.counter));
-                        editor.putString("firstLanguage" ,lang1.getSelectedItem().toString());
-                        editor.putString("secondLanguage",lang2.getSelectedItem().toString());
-                        editor.putString("firstInput" ,textInput.getText().toString());
-                        editor.putString("secondInput",setTranslatedText.getText().toString());
-                        editor.apply();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        setTranslatedText.setText("Getting translation model please wait...");
-                    }
-                });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("Translator model", e.getMessage());
+                            setTranslatedText.setText("Failed getting model");
+                        }
+                    });
+                    translator.translate(textInput.getText().toString()).addOnSuccessListener(new OnSuccessListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            setTranslatedText.setText(s);
+                            fragment_history.counter++;
+                            fragment_history.data.add(new HistoryData(lang1.getSelectedItem().toString(), lang2.getSelectedItem().toString(), textInput.getText().toString(), setTranslatedText.getText().toString(), fragment_history.counter));
+                            editor.putString("firstLanguage", lang1.getSelectedItem().toString());
+                            editor.putString("secondLanguage", lang2.getSelectedItem().toString());
+                            editor.putString("firstInput", textInput.getText().toString());
+                            editor.putString("secondInput", setTranslatedText.getText().toString());
+                            editor.apply();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            setTranslatedText.setText("Getting translation model please wait...");
+                        }
+                    });
 
+                }
+                else {
+                    Toast.makeText(getContext(),"Field is empty",Toast.LENGTH_LONG).show();
+                }
             }
         });
         lang1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

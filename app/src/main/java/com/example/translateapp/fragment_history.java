@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,7 +35,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 
@@ -48,6 +54,7 @@ public class fragment_history extends Fragment {
     private ListView historyHolder;
     static int counter=0;
     Button delete;
+    static int starter =0;
     static boolean deleter = false;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -139,7 +146,19 @@ public class fragment_history extends Fragment {
 
     @Override
     public void onResume() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        starter++;
+        SharedPreferences getData = getContext().getSharedPreferences("list", Context.MODE_PRIVATE);
+        String serialized = getData.getString("myData", null);
+        if(starter==1) {
+            if (serialized != null) {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<HistoryData>>() {
+                }.getType();
+                //data = gson.fromJson(serialized, type);
+                data.addAll(gson.fromJson(serialized, type));
+            }
+        }
+        /*SharedPreferences sharedPreferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
         String lang1 = sharedPreferences.getString("firstLanguage","");
         String lang2 = sharedPreferences.getString("secondLanguage","");
         String firstInput = sharedPreferences.getString("firstInput","");
@@ -151,7 +170,7 @@ public class fragment_history extends Fragment {
         if(deleter==false&&counter==0&&(!firstInput.equals(""))){
             data.add(new HistoryData(lang1,lang2,firstInput,secondInput,counter));
             counter++;
-        }
+        }*/
         CustomAdapter adapter = new CustomAdapter(getContext(),data);
         historyHolder.setAdapter(adapter);
         delete.setOnClickListener(new View.OnClickListener() {
@@ -160,11 +179,35 @@ public class fragment_history extends Fragment {
                 ArrayList<HistoryData> list = data;
                 data.removeAll(list);
                 counter = 0;
+                getData.edit().clear();
+                //sharedPreferences.edit().clear();
                 //data.clear();
                 adapter.notifyDataSetChanged();
                 deleter = true;
             }
         });
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("list",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        editor.putString("myData",json);
+        editor.commit();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("list",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        editor.putString("myData",json);
+        editor.commit();
+        super.onPause();
     }
 }

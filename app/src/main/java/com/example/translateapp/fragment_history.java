@@ -147,6 +147,7 @@ public class fragment_history extends Fragment {
     public void onResume() {
         starter++;
         SharedPreferences getData = getContext().getSharedPreferences("list", Context.MODE_PRIVATE);
+        SharedPreferences returningData = getContext().getSharedPreferences("pref2",Context.MODE_PRIVATE);
         String serialized = getData.getString("myData", null);
         if(starter==1) {
             if (serialized != null) {
@@ -164,7 +165,8 @@ public class fragment_history extends Fragment {
                 ArrayList<HistoryData> list = data;
                 data.removeAll(list);
                 counter = 0;
-                getData.edit().clear();
+                getData.edit().clear().commit();
+                returningData.edit().clear().commit();
                 adapter.notifyDataSetChanged();
                 deleter = true;
             }

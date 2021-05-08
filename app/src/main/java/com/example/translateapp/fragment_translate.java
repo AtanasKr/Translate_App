@@ -217,8 +217,6 @@ public class fragment_translate extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("pref2",Context.MODE_PRIVATE);
         Spinner lang1 =(Spinner) getView().findViewById(R.id.lang1);
         Spinner lang2 =(Spinner) getView().findViewById(R.id.lang2);
-        //langName1.setText(sharedPreferences.getString("returnFirstName",""));
-        //langName2.setText(sharedPreferences.getString("returnSecondName",""));
         lang1.setSelection(getIndex(lang1,sharedPreferences.getString("returnFirstName","")));
         lang2.setSelection(getIndex(lang2,sharedPreferences.getString("returnSecondName","")));
         textInput.setText(sharedPreferences.getString("returnFirstInput",""));

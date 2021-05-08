@@ -127,7 +127,6 @@ public class fragment_history extends Fragment {
                View popUpView = LayoutInflater.from(getActivity()).inflate(R.layout.pop_up,null);
                 TextView firstPreviewText = popUpView.findViewById(R.id.langPreview1);
                 TextView secondPreviewText = popUpView.findViewById(R.id.langPreview);
-                //Button delete = popUpView.findViewById(R.id.btnDelete);
                 firstPreviewText.setText(data.get(position).getFirstInput().substring(0, Math.min(data.get(position).getFirstInput().length(),10)) + "...");
                 secondPreviewText.setText(data.get(position).getSecondInput().substring(0, Math.min(data.get(position).getSecondInput().length(),10)) + "...");
                 Dialog builder = new Dialog(getActivity());
@@ -154,23 +153,9 @@ public class fragment_history extends Fragment {
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<HistoryData>>() {
                 }.getType();
-                //data = gson.fromJson(serialized, type);
                 data.addAll(gson.fromJson(serialized, type));
             }
         }
-        /*SharedPreferences sharedPreferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
-        String lang1 = sharedPreferences.getString("firstLanguage","");
-        String lang2 = sharedPreferences.getString("secondLanguage","");
-        String firstInput = sharedPreferences.getString("firstInput","");
-        String secondInput = sharedPreferences.getString("secondInput","");
-        if(deleter==false&&(counter!=0)&&(!(data.get(counter-1).getLangName1().equals(lang1)&&data.get(counter-1).getLangName2().equals(lang2)&&data.get(counter-1).getFirstInput().equals(firstInput)&&data.get(counter-1).getSecondInput().equals(secondInput)))){
-            counter++;
-            data.add(new HistoryData(lang1,lang2,firstInput,secondInput,counter));
-        }
-        if(deleter==false&&counter==0&&(!firstInput.equals(""))){
-            data.add(new HistoryData(lang1,lang2,firstInput,secondInput,counter));
-            counter++;
-        }*/
         CustomAdapter adapter = new CustomAdapter(getContext(),data);
         historyHolder.setAdapter(adapter);
         delete.setOnClickListener(new View.OnClickListener() {
@@ -180,8 +165,6 @@ public class fragment_history extends Fragment {
                 data.removeAll(list);
                 counter = 0;
                 getData.edit().clear();
-                //sharedPreferences.edit().clear();
-                //data.clear();
                 adapter.notifyDataSetChanged();
                 deleter = true;
             }
